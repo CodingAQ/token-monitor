@@ -358,12 +358,22 @@ function clientSourceRoots(clientsCsv, options = {}) {
   // Proma — session transcripts at ~/.proma/agent-sessions/*.jsonl. The fork
   // parses it from tokscale's effective home, like the Qoder CN paths below.
   add('proma', ['proma-sessions', path.join(tokscaleHome, '.proma', 'agent-sessions')]);
-  // CodeArts CLI (Huawei Cloud) — OpenCode-schema SQLite store under the CLI
-  // home, read by the fork from tokscale's effective home like Proma above.
-  // The exact opencode.db file is the source; its WAL/SHM sidecars sit in the
-  // same directory, so watching the directory catches every commit.
-  const codeartsDataDir = path.join(tokscaleHome, '.codeartsdoer', 'codearts-data');
-  add('codearts', ['codearts-db', codeartsDataDir, path.join(codeartsDataDir, 'opencode.db')]);
+  // CodeArts (Huawei Cloud) — the standalone CLI keeps an OpenCode-schema
+  // SQLite store in cli-data; the IDE extension and the desktop agent share
+  // a sibling codearts-data store. Both carry real usage, so the fork scans
+  // both by default (a missing store is a valid empty source, hence
+  // optional) and merges them under the one codearts id;
+  // TOKEN_MONITOR_CODEARTS_DB_PATH overrides with a single explicit database
+  // for relocated homes and tests. The exact opencode.db files are the
+  // sources; their WAL/SHM sidecars sit in the same directories, so watching
+  // the directories catches every commit.
+  add(
+    'codearts',
+    ...['cli-data', 'codearts-data'].map((store) => {
+      const dir = path.join(tokscaleHome, '.codeartsdoer', store);
+      return ['codearts-db', dir, path.join(dir, 'opencode.db'), true];
+    })
+  );
   // Qoder CN — legacy SQLite DB under the platform Application Support dir,
   // or the JSONL transcript tree used by current builds.
   const qoderCnPaths = qoderCnDataPaths({ homeDir: home, platform, env });

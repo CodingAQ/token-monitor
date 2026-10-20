@@ -248,8 +248,11 @@ const TOKEN_CONTRACT_CASES = Object.freeze([
   },
   {
     // Fork-only client (crates/tokscale-core/src/token_monitor/codearts.rs):
-    // CodeArts CLI stores assistant turns in OpenCode's SQLite schema under
-    // `~/.codeartsdoer/codearts-data/opencode.db`. Anthropic-shaped usage —
+    // CodeArts stores assistant turns in OpenCode's SQLite schema under
+    // `~/.codeartsdoer/` — the CLI in `cli-data`, the IDE extension and the
+    // desktop agent in a shared `codearts-data`; the fork scans both by
+    // default. The fixture uses the CLI store, the primary default.
+    // Anthropic-shaped usage —
     // input excludes the cache buckets, reasoning is a disjoint additive
     // bucket — and neither the payload's `total` nor its zero `cost` reach
     // the wire row.
@@ -260,7 +263,7 @@ const TOKEN_CONTRACT_CASES = Object.freeze([
     expectedSession: { id: 'tm-contract-sess', totalTokens: 2180, outputTokens: 340, reasoningTokens: 60 },
     writeFixture(home) {
       const { DatabaseSync } = require('node:sqlite');
-      const dir = path.join(home, '.codeartsdoer', 'codearts-data');
+      const dir = path.join(home, '.codeartsdoer', 'cli-data');
       fs.mkdirSync(dir, { recursive: true });
       const db = new DatabaseSync(path.join(dir, 'opencode.db'));
       try {

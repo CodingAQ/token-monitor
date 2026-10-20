@@ -79,11 +79,12 @@
     { id: 'workbuddy', label: 'WorkBuddy' },
     { id: 'proma', label: 'Proma', forkOnly: true },
     { id: 'qodercn', label: 'Qoder CN', defaultTracked: false, forkOnly: true },
-    // CodeArts CLI (Huawei Cloud) stores its sessions in OpenCode's own SQLite
-    // schema under `~/.codeartsdoer/codearts-data/opencode.db`, which upstream
-    // tokscale never reads — the fork parses it as an owned client, so like
+    // CodeArts (Huawei Cloud) keeps OpenCode-schema SQLite stores under
+    // `~/.codeartsdoer/` — the CLI in `cli-data`, the IDE extension and the
+    // desktop agent in a shared `codearts-data` — both scanned by the fork
+    // and merged into this one id, which upstream tokscale never reads. Like
     // Proma it ships default-tracked on the forkOnly axis.
-    { id: 'codearts', label: 'CodeArts CLI', forkOnly: true },
+    { id: 'codearts', label: 'CodeArts', forkOnly: true },
     { id: 'reasonix', label: 'Reasonix' },
     { id: 'dsh', label: 'DeepSeek Harness' },
     { id: 'cherrystudio', label: 'Cherry Studio' },

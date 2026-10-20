@@ -79,7 +79,7 @@ const supportedToolOrder = [
   'WorkBuddy',
   'Proma',
   'Qoder',
-  'CodeArts CLI',
+  'CodeArts',
   'Reasonix',
   'DeepSeek / DeepSeek Harness',
   'Cherry Studio',
